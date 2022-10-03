@@ -259,27 +259,6 @@ void Main::printResultFunc(
     , const bool toFile
     , const lbool ret
 ) {
-    if (ret == l_True) {
-        if(toFile) {
-            *os << "SAT" << endl;
-        }
-        else if (!printResult) *os << "s SATISFIABLE" << endl;
-        else                   *os << "s SATISFIABLE" << endl;
-     } else if (ret == l_False) {
-        if(toFile) {
-            *os << "UNSAT" << endl;
-        }
-        else if (!printResult) *os << "s UNSATISFIABLE" << endl;
-        else                   *os << "s UNSATISFIABLE" << endl;
-    } else {
-        *os << "s INDETERMINATE" << endl;
-    }
-    if (ret == l_True && !printResult && !toFile)
-    {
-        cout << "c Not printing satisfying assignment. "
-        "Use the '--printsol 1' option for that" << endl;
-    }
-
     if (ret == l_True && (printResult || toFile)) {
         if (toFile) {
             auto fun = [&](uint32_t var) {
@@ -1312,26 +1291,15 @@ lbool Main::multi_solutions()
 
     unsigned long current_nr_of_solutions = 0;
     lbool ret = l_True;
-    while(current_nr_of_solutions < max_nr_of_solutions && ret == l_True) {
+    while(ret == l_True) {
         ret = solver->solve(&assumps, only_sampling_solution);
         current_nr_of_solutions++;
 
-        if (ret == l_True && current_nr_of_solutions < max_nr_of_solutions) {
-            printResultFunc(&cout, false, ret);
+        if (ret == l_True) {
             if (resultfile) {
                 printResultFunc(resultfile, true, ret);
             }
-
-            if (conf.verbosity) {
-                cout
-                << "c Number of solutions found until now: "
-                << std::setw(6) << current_nr_of_solutions
-                << endl;
-            }
-
-            if (!dont_ban_solutions) {
-                ban_found_solution();
-            }
+            ban_found_solution();
         }
     }
     return ret;
