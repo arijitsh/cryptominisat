@@ -1316,7 +1316,7 @@ void Main::ban_found_solution()
             }
         }
     } else {
-      for (const uint32_t var: sampling_vars) {
+        for (const uint32_t var: sampling_vars) {
           if (solver->get_model()[var] != l_Undef) {
               lits.push_back( Lit(var, (solver->get_model()[var] == l_True)? true : false) );
           }

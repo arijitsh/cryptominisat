@@ -114,7 +114,7 @@ class Main: public MainCommon
         //Sampling vars
         vector<uint32_t> sampling_vars;
         std::string sampling_vars_str = "";
-        bool only_sampling_solution = false;
+        bool only_sampling_solution = true;
         std::string assump_filename;
         vector<Lit> assumps;
 
