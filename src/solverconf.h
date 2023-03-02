@@ -36,6 +36,7 @@ namespace CMSat {
 enum class ClauseClean {
     glue = 0
     , activity = 1
+    , uip1 = 2
 };
 
 inline unsigned clean_to_int(ClauseClean t)
@@ -47,6 +48,9 @@ inline unsigned clean_to_int(ClauseClean t)
 
         case ClauseClean::activity:
             return 1;
+
+        case ClauseClean::uip1:
+            return 2;
     }
 
     assert(false);
