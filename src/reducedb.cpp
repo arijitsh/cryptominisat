@@ -285,8 +285,10 @@ void ReduceDB::handle_lev2()
         if (keep_num == 0) {
             continue;
         }
+        sort_red_cls(static_cast<ClauseClean>(1));
+        mark_top_N_clauses_lev2(keep_num/2);
         sort_red_cls(static_cast<ClauseClean>(2));
-        mark_top_N_clauses_lev2(keep_num);
+        mark_top_N_clauses_lev2(keep_num/2);
     }
     assert(delayed_clause_free.empty());
     cl_marked = 0;
