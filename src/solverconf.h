@@ -36,7 +36,8 @@ namespace CMSat {
 enum class ClauseClean {
     glue = 0
     , activity = 1
-    , uip1 = 2
+    , prop = 2
+    , rand = 3
 };
 
 inline unsigned clean_to_int(ClauseClean t)
@@ -49,8 +50,11 @@ inline unsigned clean_to_int(ClauseClean t)
         case ClauseClean::activity:
             return 1;
 
-        case ClauseClean::uip1:
+        case ClauseClean::prop:
             return 2;
+
+        case ClauseClean::rand:
+            return 3;
     }
 
     assert(false);
@@ -259,6 +263,7 @@ class DLL_PUBLIC SolverConf
 
         //if non-zero, we reduce at every X conflicts.
         //Otherwise we geometrically keep around max_temp_lev2_learnt_clauses*(inc**N)
+        unsigned reduce_db_type;
         unsigned every_lev2_reduce;
         unsigned every_pred_reduce;
 

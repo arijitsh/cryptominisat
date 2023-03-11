@@ -129,7 +129,20 @@ struct SortRedClsProps
     }
 };
 
-#endif
+struct SortRedClsRand
+{
+    explicit SortRedClsRand(ClauseAllocator& _cl_alloc) :
+    cl_alloc(_cl_alloc)
+    {}
+    ClauseAllocator& cl_alloc;
+    inline bool operator () (const ClOffset xOff, const ClOffset yOff) const
+    {
+        const Clause* x = cl_alloc.ptr(xOff);
+        const Clause* y = cl_alloc.ptr(yOff);
+        return true;
+    }
+};
+
 
 #ifdef FINAL_PREDICTOR
 struct SortRedClsPredShort
@@ -233,9 +246,15 @@ void ReduceDB::sort_red_cls(ClauseClean clean_type)
             break;
         }
 
-        case ClauseClean::uip1 : {
-            std::cout << "UIP1 clause cleaning" << std::endl;
-            std::sort(solver->longRedCls[2].begin(), solver->longRedCls[2].end(), SortRedClsUIP1(solver->cl_alloc));
+        case ClauseClean::prop : {
+            std::cout << "Prop clause cleaning" << std::endl;
+            std::sort(solver->longRedCls[2].begin(), solver->longRedCls[2].end(), SortRedClsProps(solver->cl_alloc));
+            break;
+        }
+
+        case ClauseClean::rand : {
+            std::cout << "Rand clause cleaning" << std::endl;
+            std::sort(solver->longRedCls[2].begin(), solver->longRedCls[2].end(), SortRedClsRand(solver->cl_alloc));
             break;
         }
         default: {
@@ -281,14 +300,13 @@ void ReduceDB::handle_lev2()
         ; keep_type++
     ) {
         const uint64_t keep_num = (double)num_to_reduce*solver->conf.ratio_keep_clauses[keep_type];
-        std::cout << "xx keep num : "<< keep_num << std::endl;
         if (keep_num == 0) {
             continue;
         }
-        sort_red_cls(static_cast<ClauseClean>(1));
-        mark_top_N_clauses_lev2(keep_num/2);
-        sort_red_cls(static_cast<ClauseClean>(2));
-        mark_top_N_clauses_lev2(keep_num/2);
+        if (solver->conf.reduce_db_type >= 2)
+            keep_type = solver->conf.reduce_db_type;
+        sort_red_cls(static_cast<ClauseClean>(keep_type));
+        mark_top_N_clauses_lev2(keep_num);
     }
     assert(delayed_clause_free.empty());
     cl_marked = 0;

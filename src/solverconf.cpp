@@ -104,6 +104,7 @@ DLL_PUBLIC SolverConf::SolverConf() :
         , pred_dontmove_until_timeinside(1) //always move, don't wait
 
         , every_lev1_reduce(10000) // kept for a while then moved to lev2
+        , reduce_db_type(1) // kept for a while then moved to lev2
         , every_lev2_reduce(15000) // cleared regularly
         , every_pred_reduce(10000) //5000 seems to work better
         , must_touch_lev1_within(70000)

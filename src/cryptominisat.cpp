@@ -236,6 +236,7 @@ void update_config(SolverConf& conf, unsigned thread_num)
             conf.branch_strategy_setup = "vsids";
             conf.varElimRatioPerIter = 0.4;
             conf.every_lev1_reduce = 0;
+            conf.reduce_db_type = 0;
             conf.every_lev2_reduce = 0;
             conf.do_bva = false;
             conf.max_temp_lev2_learnt_clauses = 30000;

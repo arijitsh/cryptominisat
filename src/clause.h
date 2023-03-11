@@ -149,11 +149,11 @@ struct ClauseStats
     };
     uint32_t last_touched_any = 0;
     int32_t ID;
+    uint32_t props_made = 0; ///<Number of times caused propagation
 
     #if defined(STATS_NEEDED) || defined (FINAL_PREDICTOR) || defined(NORMAL_CL_USE_STATS)
     uint32_t extra_pos = numeric_limits<uint32_t>::max();
     uint32_t uip1_used = 0; ///N.o. times claue was used during 1st UIP generation in this RDB
-    uint32_t props_made = 0; ///<Number of times caused propagation
     #endif
 
     static ClauseStats combineStats(const ClauseStats& first, const ClauseStats& second)

@@ -130,6 +130,7 @@ Solver::Solver(const SolverConf *_conf, std::atomic<bool>* _must_interrupt_inter
 
     set_up_sql_writer();
     next_lev1_reduce = conf.every_lev1_reduce;
+    reduce_db_type = conf.reduce_db_type;
     next_lev2_reduce =  conf.every_lev2_reduce;
     #if defined(STATS_NEEDED) || defined(FINAL_PREDICTOR)
     next_pred_reduce =  conf.every_pred_reduce;

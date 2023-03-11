@@ -344,6 +344,7 @@ class Searcher : public HyperEngine
         /////////////////////
         void reduce_db_if_needed();
         uint64_t next_lev1_reduce;
+        uint64_t reduce_db_type;
         uint64_t next_lev2_reduce;
         uint64_t next_pred_reduce;
 
