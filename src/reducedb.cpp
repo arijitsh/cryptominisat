@@ -114,6 +114,8 @@ struct SortRedClsUIP1
     }
 };
 
+#endif
+
 struct SortRedClsProps
 {
     explicit SortRedClsProps(ClauseAllocator& _cl_alloc) :
