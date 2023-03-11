@@ -139,7 +139,7 @@ struct SortRedClsRand
     {
         const Clause* x = cl_alloc.ptr(xOff);
         const Clause* y = cl_alloc.ptr(yOff);
-        return true;
+        return x->stats.activity < y->stats.activity;
     }
 };
 
