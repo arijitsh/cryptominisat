@@ -131,21 +131,6 @@ struct SortRedClsProps
     }
 };
 
-struct SortRedClsRand
-{
-    explicit SortRedClsRand(ClauseAllocator& _cl_alloc) :
-    cl_alloc(_cl_alloc)
-    {}
-    ClauseAllocator& cl_alloc;
-    inline bool operator () (const ClOffset xOff, const ClOffset yOff) const
-    {
-        const Clause* x = cl_alloc.ptr(xOff);
-        const Clause* y = cl_alloc.ptr(yOff);
-        return x->stats.activity < y->stats.activity;
-    }
-};
-
-
 #ifdef FINAL_PREDICTOR
 struct SortRedClsPredShort
 {
@@ -256,7 +241,7 @@ void ReduceDB::sort_red_cls(ClauseClean clean_type)
 
         case ClauseClean::rand : {
             std::cout << "Rand clause cleaning" << std::endl;
-            std::sort(solver->longRedCls[2].begin(), solver->longRedCls[2].end(), SortRedClsRand(solver->cl_alloc));
+            std::random_shuffle(solver->longRedCls[2].begin(), solver->longRedCls[2].end());
             break;
         }
         default: {
