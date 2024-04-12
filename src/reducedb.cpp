@@ -222,15 +222,22 @@ void ReduceDB::sort_red_cls(ClauseClean clean_type)
 
     switch (clean_type) {
         case ClauseClean::glue : {
+            std::cout << "Glue clause cleaning" << std::endl;
             std::sort(solver->longRedCls[2].begin(), solver->longRedCls[2].end(), SortRedClsGlue(solver->cl_alloc));
             break;
         }
 
         case ClauseClean::activity : {
+            std::cout << "Activity clause cleaning" << std::endl;
             std::sort(solver->longRedCls[2].begin(), solver->longRedCls[2].end(), SortRedClsAct(solver->cl_alloc));
             break;
         }
 
+        case ClauseClean::uip1 : {
+            std::cout << "UIP1 clause cleaning" << std::endl;
+            std::sort(solver->longRedCls[2].begin(), solver->longRedCls[2].end(), SortRedClsUIP1(solver->cl_alloc));
+            break;
+        }
         default: {
             assert(false && "Unknown cleaning type");
         }
@@ -274,10 +281,11 @@ void ReduceDB::handle_lev2()
         ; keep_type++
     ) {
         const uint64_t keep_num = (double)num_to_reduce*solver->conf.ratio_keep_clauses[keep_type];
+        std::cout << "xx keep num : "<< keep_num << std::endl;
         if (keep_num == 0) {
             continue;
         }
-        sort_red_cls(static_cast<ClauseClean>(keep_type));
+        sort_red_cls(static_cast<ClauseClean>(2));
         mark_top_N_clauses_lev2(keep_num);
     }
     assert(delayed_clause_free.empty());
