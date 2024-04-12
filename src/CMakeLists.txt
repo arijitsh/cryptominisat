@@ -22,6 +22,7 @@ include_directories( ${PROJECT_SOURCE_DIR} )
 include_directories( ${BOSPHORUS_INCLUDE_DIRS} )
 include_directories( ${LOUVAIN_COMMUNITIES_INCLUDE_DIRS} )
 include_directories( SYSTEM ${MPI_INCLUDE_PATH} )
+include_directories( SYSTEM ${GMP_INCLUDE_DIR} )
 
 if (NOT WIN32)
     add_cxx_flag_if_supported("-Wno-bitfield-constant-conversion")
@@ -46,7 +47,6 @@ add_sanitize_flags()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/../cadiback)
 
 if (ENABLE_TESTING)
     add_definitions( -DCMS_TESTING_ENABLED )

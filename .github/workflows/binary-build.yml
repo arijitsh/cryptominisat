@@ -29,7 +29,20 @@ jobs:
     - name: Install boost & help2man for Linux
       if: matrix.os == 'ubuntu-20.04'
       run: sudo apt-get update && sudo apt-get install -yq libboost-dev libboost-serialization-dev libboost-program-options-dev help2man libgmp-dev
-
+      
+    - name: Install gmp for Mac
+      if: matrix.os == 'macos-13'
+      run: | 
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install cmake
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install zlib
+        wget https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz
+        tar xf gmp-6.3.0.tar.xz
+        cd gmp-6.3.0
+        ./configure --enable-static -enable-cxx --enable-shared
+        make -j8
+        sudo make install
+        cd ..
+      
     - name: Installing Numpy
       run: |
         pip install pip --upgrade
@@ -45,7 +58,7 @@ jobs:
     - name: Build Cadical
       run: |
        cd cadical
-       ./configure
+       CXX=c++ ./configure
        make -j8
        cd ..
 
@@ -59,7 +72,7 @@ jobs:
     - name: Build Cadiback
       run: |
        cd cadiback
-       ./configure
+       CXX=c++ ./configure
        make -j8
        cd ..
        
@@ -74,7 +87,6 @@ jobs:
       run: git submodule update --init
 
     - name: Configure CMake for linux
-      working-directory: cryptominisat
       if: matrix.os == 'ubuntu-20.04'
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
@@ -82,10 +94,19 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DENABLE_TESTING=ON  -DSTATICCOMPILE=${{ matrix.staticcompile }}
+      run: |
+        pwd
+        echo "end pwd"
+        cd cryptominisat
+        pwd
+        echo "end pwd"
+        ls
+        echo "end list"
+        ls ../
+        echo "end list"
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DENABLE_TESTING=ON  -DSTATICCOMPILE=${{ matrix.staticcompile }}
     
     - name: Configure CMake for non-linux
-      working-directory: cryptominisat
       if: matrix.os != 'ubuntu-20.04'
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
@@ -93,21 +114,20 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DENABLE_TESTING=OFF -DSTATICCOMPILE=${{ matrix.staticcompile }}
-
-    - name: Build
-      working-directory: cryptominisat
-      #working-directory: ${{runner.workspace}}/build
-      # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config ${{ matrix.build_type }}
-
-    - name: Test
-      working-directory: cryptominisat
-      #working-directory: ${{runner.workspace}}/build
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{ matrix.build_type }}
-      
+      run: |
+        pwd
+        echo "end pwd"
+        cd cryptominisat
+        pwd
+        echo "end pwd"
+        ls
+        echo "end list"
+        ls ../
+        echo "end list"
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DENABLE_TESTING=OFF -DSTATICCOMPILE=${{ matrix.staticcompile }}
+        cmake --build . --config ${{ matrix.build_type }}
+        ctest -C ${{ matrix.build_type }}
+              
     - name: Upload Artifact - Linux
       if: matrix.os == 'ubuntu-20.04' && matrix.staticcompile == 'ON'
       uses: actions/upload-artifact@v3
